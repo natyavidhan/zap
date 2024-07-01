@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock title %}
 {% block body %}
-<div class="text-center">
-    <h1 class="mt-5">
-        Welcome {{user.name}}
-    </h1>
-</div>
+<script>
+    document.querySelector("[purpose='home']").classList.add("active");
+</script>
 {% endblock body %} 
