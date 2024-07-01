@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 
 import os
 
+from database import Database
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -11,10 +13,13 @@ app.config.from_mapping(dict(os.environ))
 
 oauth = OAuth(app)
 
+db = Database()
+
 @app.route("/")
 def index():
     if 'user'not in session:
         return render_template("index.html")
+    return render_template("home.html", user=session['user'])
 
 
 @app.route('/google/')
@@ -39,7 +44,8 @@ def google():
 def google_auth():
     token = oauth.google.authorize_access_token()
     user = oauth.google.parse_id_token(token)
-    print(" Google User ", user)
+    user = db.create_user(user['email'], user['name'])
+    session['user'] = user
     return redirect('/')
 
 if __name__ == "__main__":
