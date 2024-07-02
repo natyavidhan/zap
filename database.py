@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import os
 from uuid import uuid4
 from datetime import datetime
+import random
 
 class Database:
     def __init__(self):
@@ -21,6 +22,7 @@ class Database:
             "_id": str(uuid4()),
             "name": name,
             "email": email,
+            "username": email.split("@")[0] + "".join([str(random.randint(0,9)) for _ in range(5)]),
             "bio": "",
             "created": datetime.now().timestamp(),
             "posts": [],
@@ -31,3 +33,5 @@ class Database:
         self.users.insert_one(user_obj)
         return user_obj
     
+    def edit_profile(self, email, username, name, bio):
+        self.users.update({"email": email}, {"$set": {"username": username, "name": name, "bio": bio}})

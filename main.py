@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, url_for, redirect
+from flask import Flask, render_template, session, url_for, redirect, request
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 
@@ -60,7 +60,28 @@ def self():
     if 'user'not in session:
         return redirect(url_for("index"))
     user = db.fetch_user("email", session['user']['email'])
-    return render_template("profile.html", user=user, me=True)
+    error = request.args.get("error")
+    return render_template("profile.html", user=user, me=True, error= error)
+
+@app.route("/edit", methods=["POST"])
+def edit():
+    if 'user'not in session:
+        return redirect(url_for("index"))
+    
+    username = request.form.get("username")
+    name = request.form.get("name")
+    bio = request.form.get("bio")
+
+    res = db.fetch_user("username", username)
+
+    if username.strip() == "" or name.strip() == "":
+        return redirect(url_for("self") + "?error=Username/name cannot be blank")
+
+    if  res is not None and res['email'] != session['user']['email']:
+        return redirect(url_for("self") + "?error=Username already in use")
+    
+    db.edit_profile(session['user']['email'], username, name, bio)
+    return redirect(url_for("self"))
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)
