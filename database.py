@@ -12,7 +12,7 @@ class Database:
         self.posts = self.db.posts
         
     def fetch_user(self, key, value):
-        self.users.find_one({key: value})
+        return self.users.find_one({key: value})
 
     def create_user(self, email, name):
         if self.fetch_user("email", email) is not None:

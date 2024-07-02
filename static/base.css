@@ -50,3 +50,22 @@ main{
 .disabled{
     color: rgb(175, 174, 174);
 }
+
+@media screen and (max-width: 1025px) {
+    .post > img{
+        width: 70vw;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .post > img{
+        width: 30vw;
+    }
+}
+
+.profile{
+    display: grid;
+}
+.modal-content{
+    background-color:  rgb(31, 31, 31);
+}

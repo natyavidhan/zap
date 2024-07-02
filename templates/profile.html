@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{user.name}}{% endblock title %}
+{% block body %}
+<div class="text-center profile">
+    <h1>{{user.name}}</h1>
+    <h5>{{user.bio}}</h5>
+    <h5>{{user.followers|length}} Followers | {{user.following|length}} Following</h5>
+    <div>
+        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> Edit</button>
+        <button type="button" class="btn btn-danger"><i class="bi bi-door-open"></i> Logout</button>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" value="{{user.username}}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" value="{{user.name}}">
+                </div>
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea class="form-control" id="bio" rows="3">{{user.bio}}</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelector("[purpose='profile']").classList.add("active");
+</script>
+{% endblock body %}

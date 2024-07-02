@@ -43,8 +43,10 @@ def google():
 @app.route('/google/auth')
 def google_auth():
     token = oauth.google.authorize_access_token()
-    user = oauth.google.parse_id_token(token)
-    user = db.create_user(user['email'], user['name'])
+    prof = oauth.google.parse_id_token(token)
+    user = db.fetch_user("email", prof['email'])
+    if  user is None:
+        user = db.create_user(prof['email'], prof['name'])
     session['user'] = user
     return redirect('/')
 
@@ -52,6 +54,13 @@ def google_auth():
 def logout():
     session.pop("user")
     return redirect(url_for("index"))
+
+@app.route("/me")
+def self():
+    if 'user'not in session:
+        return redirect(url_for("index"))
+    user = db.fetch_user("email", session['user']['email'])
+    return render_template("profile.html", user=user, me=True)
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)
