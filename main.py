@@ -83,5 +83,18 @@ def edit():
     db.edit_profile(session['user']['email'], username, name, bio)
     return redirect(url_for("self"))
 
+@app.route("/post", methods=["GET", "POST"])
+def post():
+    if 'user' not in session:
+        return redirect(url_for(index))
+    
+    if request.method == "GET":
+        return render_template("post.html")
+    
+    image   = request.files.get("image")
+    caption = request.form.get("caption")
+    tags    = request.form.get("tags")
+    
+
 if __name__ == "__main__":
     app.run("localhost", debug=True)

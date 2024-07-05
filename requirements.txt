@@ -1,4 +1,7 @@
 flask
 pymongo
 dnspython
-tixte.py
+supabase
+authlib
+python-dotenv
+requests
