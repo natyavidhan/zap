@@ -43,9 +43,10 @@ def google():
 @app.route('/google/auth')
 def google_auth():
     token = oauth.google.authorize_access_token()
-    prof = oauth.google.parse_id_token(token)
+    prof = token['userinfo']
+    print(prof)
     user = db.fetch_user("email", prof['email'])
-    if  user is None:
+    if  len(user) == 0:
         user = db.create_user(prof['email'], prof['name'])
     session['user'] = user
     return redirect('/')
@@ -93,8 +94,9 @@ def post():
     
     image   = request.files.get("image")
     caption = request.form.get("caption")
-    tags    = request.form.get("tags")
+    tags    = [i.strip() for i in request.form.get("tags").split(",")]
     
+    db.create_post(session['user']['_id'], caption, image, tags)
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)
