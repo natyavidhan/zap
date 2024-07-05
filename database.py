@@ -46,8 +46,7 @@ class Database:
             .upload(file=file, 
                     path=location, 
                     file_options={"content-type": content_type}).json()['Key']
-        return f"https://okzqzfyhfttiypjfmolk.supabase.co/storage/v1/object/public/{key}"
-# https://okzqzfyhfttiypjfmolk.supabase.co/storage/v1/object/public/
+        return f"{os.environ.get("SUPABASE_URL")}/storage/v1/object/public/{key}"
 
     def create_post(self, user, caption, img:FileStorage, tags):
         post_id = str(uuid4())
@@ -63,3 +62,11 @@ class Database:
             "comments": [],
             "tags": tags
         }
+
+        self.posts.insert(post).execute()
+
+        posts = self.users.select("posts").eq("_id", user).execute().model_dump()['data'][0]
+        posts.append(post_id)
+        self.users.update({"posts": posts}).eq("_id", user).execute()
+
+        return post
