@@ -1,4 +1,3 @@
-from pymongo import MongoClient
 from supabase import create_client, Client
 
 import os
@@ -11,8 +10,6 @@ from werkzeug.datastructures import FileStorage
 
 class Database:
     def __init__(self):
-        self.db = MongoClient(os.environ.get("MONGO_URL"))['zap']
-
         url: str = os.environ.get("SUPABASE_URL")
         key: str = os.environ.get("SUPABASE_KEY")
         self.supabase: Client = create_client(url, key)
