@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}New Post{% endblock title %}
+{% block body %}
+{% if error %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{error}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+<div class="mt-5">
+    <form action="/post" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="image" class="form-label">Upload image</label>
+            <input class="form-control" type="file" id="image" name="image">
+        </div>
+        <div class="mb-3">
+            <label for="caption" class="form-label">Caption</label>
+            <input class="form-control" type="text" id="caption" name="caption">
+        </div>
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags (seperate with commas)</label>
+            <input class="form-control" type="text" id="tags" name="tags">
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+</div>
+<script>
+    document.querySelector("[purpose='new']").classList.add("active");
+</script>
+{% endblock body %}

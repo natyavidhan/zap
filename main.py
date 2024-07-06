@@ -85,17 +85,24 @@ def edit():
     db.edit_profile(session['user']['email'], username, name, bio)
     return redirect(url_for("self"))
 
-@app.route("/post", methods=["GET", "POST"])
-def post():
+@app.route("/new", methods=["GET", "POST"])
+def new():
     if 'user' not in session:
         return redirect(url_for(index))
     
+    error = request.args.get("error")
+
     if request.method == "GET":
-        return render_template("post.html")
+        return render_template("new.html", error=error)
     
     image   = request.files.get("image")
     caption = request.form.get("caption")
-    tags    = [i.strip() for i in request.form.get("tags").split(",")]
+    tags    = [i.strip() for i in request.form.get("tags").split(",") if i.strip() != ""]
+
+    print(dict(request.form))
+
+    if image is None or caption.strip() == "":
+        return redirect("/new?error=No image/caption provided")
     
     post = db.create_post(session['user']['_id'], caption, image, tags)
 
