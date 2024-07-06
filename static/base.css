@@ -45,6 +45,8 @@ main{
     display: grid;
     align-items: center;
     justify-content: center;
+    gap: 3rem;
+    margin-top: 3rem;
 }
 
 .disabled{

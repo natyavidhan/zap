@@ -41,7 +41,7 @@ class Database:
         return user_obj
     
     def edit_profile(self, email, username, name, bio):
-        self.users.update({"email": email}, {"$set": {"username": username, "name": name, "bio": bio}})
+        self.users.update({"username": username, "name": name, "bio": bio}).eq("email", email).execute()
 
     def upload_file(self, location, file, content_type):
         key =  self.supabase.storage.from_("Zap")\
@@ -72,3 +72,9 @@ class Database:
         self.users.update({"posts": posts}).eq("_id", user).execute()
 
         return post
+    
+    def get_post(self, post_id):
+        post = self.posts.select("*").eq("_id", post_id).execute().model_dump()['data']
+        if len(post) == 0:
+            return None
+        return post[0]

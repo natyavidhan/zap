@@ -10,7 +10,7 @@
 <div class="text-center profile">
     <h1>{{user.name}}</h1>
     <h5>{{user.bio}}</h5>
-    <h5>{{user.followers|length}} Followers | {{user.following|length}} Following</h5>
+    <h5>{{user.followers|length}} Followers • {{user.following|length}} Following</h5>
     <div>
         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> Edit</button>
         <button type="button" class="btn btn-danger"><i class="bi bi-door-open"></i> Logout</button>
@@ -47,6 +47,21 @@
         </div>
     </div>
 </div>
+<div class="feed">
+    {% for post in posts %}
+    <div class="post">
+        <img src="{{post.img_url}}" alt="" class="post-img">
+        <div class="stats">
+            <button class="btn btn-outline-light"><i class="bi bi-heart"></i> {{post.likes|length}}</button>
+        </div>
+        <div>
+            <h6 class="disabled">{% for tag in post.tags %}#{{tag}} {% endfor %}</h6>
+            <h4>{{post.caption}}</h4>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 <script>
     document.querySelector("[purpose='profile']").classList.add("active");
 </script>

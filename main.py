@@ -63,7 +63,10 @@ def self():
     print(session['user'])
     user = db.fetch_user("email", session['user']['email'])
     error = request.args.get("error")
-    return render_template("profile.html", user=user, me=True, error= error)
+
+    posts = [db.get_post(post_id) for post_id in user['posts']]
+
+    return render_template("profile.html", user=user, me=True, error= error, posts=posts)
 
 @app.route("/edit", methods=["POST"])
 def edit():
@@ -107,6 +110,14 @@ def new():
     post = db.create_post(session['user']['_id'], caption, image, tags)
 
     return post
+
+@app.route("/post/<post_id>")
+def post(post_id):
+    post = db.get_post(post_id)
+    if not post:
+        return redirect("/")
+    user = db.fetch_user("_id", post['user'])
+    return render_template("post.html", post=post, user=user)
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)
