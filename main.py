@@ -46,7 +46,7 @@ def google_auth():
     prof = token['userinfo']
     print(prof)
     user = db.fetch_user("email", prof['email'])
-    if  len(user) == 0:
+    if user is None:
         user = db.create_user(prof['email'], prof['name'])
     session['user'] = user
     return redirect('/')
@@ -60,6 +60,7 @@ def logout():
 def self():
     if 'user'not in session:
         return redirect(url_for("index"))
+    print(session['user'])
     user = db.fetch_user("email", session['user']['email'])
     error = request.args.get("error")
     return render_template("profile.html", user=user, me=True, error= error)
@@ -96,7 +97,9 @@ def post():
     caption = request.form.get("caption")
     tags    = [i.strip() for i in request.form.get("tags").split(",")]
     
-    db.create_post(session['user']['_id'], caption, image, tags)
+    post = db.create_post(session['user']['_id'], caption, image, tags)
+
+    return post
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)

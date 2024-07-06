@@ -19,10 +19,12 @@ class Database:
         
     def fetch_user(self, key, value):
         res = self.users.select("*").eq(key, value).execute().model_dump()['data']
-        return res
+        if len(res) == 0:
+            return None
+        return res[0]
 
     def create_user(self, email, name):
-        if len(self.fetch_user("email", email)) != 0:
+        if self.fetch_user("email", email) is not None:
             return False
         user_obj = {
             "_id": str(uuid4()),
@@ -46,16 +48,16 @@ class Database:
             .upload(file=file, 
                     path=location, 
                     file_options={"content-type": content_type}).json()['Key']
-        return f"{os.environ.get("SUPABASE_URL")}/storage/v1/object/public/{key}"
+        return f"{os.environ.get('SUPABASE_URL')}/storage/v1/object/public/{key}"
 
     def create_post(self, user, caption, img:FileStorage, tags):
         post_id = str(uuid4())
         mime = img.content_type
-        url = self.upload_file(f"Posts/{post_id}.{mime.split("/")[1]}", img.read(), mime)
+        url = self.upload_file(f"Posts/{post_id}.{mime.split('/')[1]}", img.read(), mime)
 
         post = {
             "_id": post_id,
-            "captions": caption,
+            "caption": caption,
             "img_url": url,
             "user": user,
             "likes": [],
@@ -65,7 +67,7 @@ class Database:
 
         self.posts.insert(post).execute()
 
-        posts = self.users.select("posts").eq("_id", user).execute().model_dump()['data'][0]
+        posts = self.users.select("posts").eq("_id", user).execute().model_dump()['data'][0]['posts']
         posts.append(post_id)
         self.users.update({"posts": posts}).eq("_id", user).execute()
 
