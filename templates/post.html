@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{post.caption}} - {{user.name}}{% endblock title %}
+{% block body %}
+<style>
+    .post{
+        background-color: #1f1f1f; 
+    }
+</style>
+<div class="post-full">
+    <div class="post">
+        <img src="{{post.img_url}}" alt="" class="post-img">
+        <div class="stats">
+            <button class="btn btn-outline-light"><i class="bi bi-heart"></i> {{post.likes|length}}</button>
+        </div>
+        <div>
+            <h6 class="disabled">{% for tag in post.tags %}#{{tag}} {% endfor %}</h6>
+            <h4>{{post.caption}}</h4>
+        </div>
+    </div>
+    <div class="comments">
+        <h4>Comments</h4>
+        {% for comment in comments %}
+            <a href="/profile/{{comment.userid}}">{{comment.username}}</a>: {{comment.text}}
+        {% endfor %}
+    </div>
+</div>
+<!-- {{post}}
+{{user}} -->
+{% endblock body %}

@@ -109,7 +109,7 @@ def new():
     
     post = db.create_post(session['user']['_id'], caption, image, tags)
 
-    return post
+    return redirect(f"/post/{post['_id']}")
 
 @app.route("/post/<post_id>")
 def post(post_id):

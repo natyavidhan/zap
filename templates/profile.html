@@ -49,7 +49,7 @@
 </div>
 <div class="feed">
     {% for post in posts %}
-    <div class="post">
+    <div class="post" onclick="window.location.href='/post/{{post._id}}'" style="cursor: pointer;">
         <img src="{{post.img_url}}" alt="" class="post-img">
         <div class="stats">
             <button class="btn btn-outline-light"><i class="bi bi-heart"></i> {{post.likes|length}}</button>

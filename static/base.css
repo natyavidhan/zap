@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 body {
-    background-color: rgb(31, 31, 31);
+    background-color: #1f1f1f;
     color: white;
     font-family: "Lato", sans-serif;
     font-weight: 400;
@@ -31,7 +31,7 @@ main{
     display: inline-grid;
     gap: 1rem;
     /* padding: 1rem; */
-    background-color: rgb(20, 20, 20);
+    background-color: #141414;
     border-radius: 1rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -50,17 +50,41 @@ main{
 }
 
 .disabled{
-    color: rgb(175, 174, 174);
+    color: #aeaeae;
 }
 
-@media screen and (max-width: 1025px) {
+@media screen and (max-width: 475px) {
     .post > img{
+        width: 95vw;
+    }
+    .post-full{        
+        grid-template-columns: 1fr;
+    }
+    .comments{
+        width: 95vw;
+    }
+}
+
+@media screen and (max-width: 1025px) and (min-width: 475px){
+    .post > img{
+        width: 70vw;
+    }
+    .post-full{        
+        grid-template-columns: 1fr;
+    }
+    .comments{
         width: 70vw;
     }
 }
 
 @media screen and (min-width: 1025px) {
     .post > img{
+        width: 30vw;
+    }
+    .post-full{        
+        grid-template-columns: 1fr 1fr;
+    }
+    .comments{
         width: 30vw;
     }
 }
@@ -70,4 +94,10 @@ main{
 }
 .modal-content{
     background-color:  rgb(31, 31, 31);
+}
+
+.post-full{
+    display: grid;
+    justify-items: center;
+    align-items: start;
 }
