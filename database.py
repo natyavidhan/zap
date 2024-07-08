@@ -78,3 +78,14 @@ class Database:
         if len(post) == 0:
             return None
         return post[0]
+    
+    def add_comment(self, user_id, post_id, comment):
+        user = self.fetch_user("_id", user_id)
+        post = self.get_post(post_id)
+        if user is None or post is None or comment.strip() == "":
+            return False
+        print(post)
+        post['comments'].append({"userid": user_id, "username": user['name'], "comment": comment})
+
+        self.posts.update({"comments": post['comments']}).eq("_id", post_id).execute()
+        return True

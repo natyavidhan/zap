@@ -119,5 +119,16 @@ def post(post_id):
     user = db.fetch_user("_id", post['user'])
     return render_template("post.html", post=post, user=user)
 
+@app.route("/comment", methods=["POST"])
+def comment():
+    if 'user' not in session:
+        return redirect("/")
+    post = request.form.get("post")
+    comment = request.form.get("comment")
+    res = db.add_comment(session['user']['_id'], post, comment)
+    if res:
+        return redirect(f"/post/{post}")
+    return redirect("/")
+
 if __name__ == "__main__":
     app.run("localhost", debug=True)

@@ -20,11 +20,12 @@
     <div class="comments">
         <form action="/comment" method="post" class="make-comment">
             <input class="form-control" type="text" placeholder="comment" name="comment">
+            <input type="hidden" name="post" value="{{post._id}}">
             <button type="submit" class="btn btn-primary">Comment</button>
         </form>
         <h4>Comments</h4>
-        {% for comment in comments %}
-            <a href="/profile/{{comment.userid}}">{{comment.username}}</a>: {{comment.text}}
+        {% for comment in post.comments %}
+            <a href="/profile/{{comment.userid}}">{{comment.username}}</a>: {{comment.comment}}
         {% endfor %}
     </div>
 </div>
