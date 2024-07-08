@@ -18,6 +18,10 @@
         </div>
     </div>
     <div class="comments">
+        <form action="/comment" method="post" class="make-comment">
+            <input class="form-control" type="text" placeholder="comment" name="comment">
+            <button type="submit" class="btn btn-primary">Comment</button>
+        </form>
         <h4>Comments</h4>
         {% for comment in comments %}
             <a href="/profile/{{comment.userid}}">{{comment.username}}</a>: {{comment.text}}
