@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, url_for, redirect, request
+from flask import Flask, render_template, session, url_for, redirect, request, jsonify
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 
@@ -116,19 +116,34 @@ def post(post_id):
     post = db.get_post(post_id)
     if not post:
         return redirect("/")
+    is_json = request.args.get("json")
     user = db.fetch_user("_id", post['user'])
-    return render_template("post.html", post=post, user=user)
+    liked = session['user']['_id'] in post['likes']
+    if is_json:
+        return jsonify({"post": post, "user": user, "liked": liked})
+    return render_template("post.html", post=post, user=user, liked=False)
 
 @app.route("/comment", methods=["POST"])
 def comment():
     if 'user' not in session:
-        return redirect("/")
-    post = request.form.get("post")
-    comment = request.form.get("comment")
+        return False
+    post = request.args.get("post")
+    comment = request.args.get("comment")
     res = db.add_comment(session['user']['_id'], post, comment)
     if res:
-        return redirect(f"/post/{post}")
-    return redirect("/")
+        return True
+    return False
+
+@app.route("/like", methods=["POST"])
+def like():
+    if 'user' not in session:
+        return False
+    post = request.args.get("post")
+    res = db.toggle_like(session['user']['_id'], post)
+    if res:
+        return True
+    return False
+
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)

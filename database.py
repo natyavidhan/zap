@@ -84,8 +84,20 @@ class Database:
         post = self.get_post(post_id)
         if user is None or post is None or comment.strip() == "":
             return False
-        print(post)
         post['comments'].append({"userid": user_id, "username": user['name'], "comment": comment})
 
         self.posts.update({"comments": post['comments']}).eq("_id", post_id).execute()
+        return True
+    
+    def toggle_like(self, user_id, post_id):
+        user = self.fetch_user("_id", user_id)
+        post = self.get_post(post_id)
+        if user is None or post is None:
+            return False
+        if user_id in post['likes']:
+            post['likes'].remove(user_id)
+        else:
+            post['likes'].append(user_id)
+        
+        self.posts.update({"likes": post['likes']}).eq("_id", post_id).execute()
         return True
