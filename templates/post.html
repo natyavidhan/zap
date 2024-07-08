@@ -10,7 +10,7 @@
     <div class="post">
         <img src="{{post.img_url}}" alt="" class="post-img">
         <div class="stats">
-            <button class="btn btn{% if not liked %}-outline{% endif %}-light"><i class="bi bi-heart"></i> {{post.likes|length}}</button>
+            <button name="like-btn" class="btn btn{% if not liked %}-outline{% endif %}-light" onclick="like()"><i class="bi bi-heart{% if liked %}-fill{% endif %}"></i> {{post.likes|length}}</button>
         </div>
         <div>
             <h6 class="disabled">{% for tag in post.tags %}#{{tag}} {% endfor %}</h6>
@@ -31,7 +31,8 @@
     </div>
 </div>
 <script>
-    function refresh_comments(post) {
+    let post = "{{post._id}}";
+    function refresh_comments() {
         $.ajax({
             type: 'GET',
             url: `/post/${post}?json=True`,
@@ -49,14 +50,37 @@
     }
 
     function comment() {
-        let post = "{{post._id}}";
         let comment = document.querySelector("input[name='comment']").value;
         $.ajax({
             type: 'POST',
             url: `/comment?post=${post}&comment=${comment}`,
             success: function(msg){
                 if (msg == "True") {
-                    refresh_comments(post);
+                    refresh_comments();
+                }
+            }
+        });
+    }
+
+    function like() {
+        $.ajax({
+            type: 'POST',
+            url: `/like?post=${post}`,
+            success: function(msg){
+                if (msg == "True") {
+                    let btn = $('button[name="like-btn"]');
+                    let count = parseInt(btn.text());
+                    if (btn.hasClass("btn-light")){
+                        btn.removeClass("btn-light");
+                        btn.addClass("btn-outline-light");
+                        count-=1;
+                        btn.html(`<i class="bi bi-heart"></i> ${count}`);
+                    } else {
+                        btn.addClass("btn-light");
+                        btn.removeClass("btn-outline-light");
+                        count+=1;
+                        btn.html(`<i class="bi bi-heart-fill"></i> ${count}`);
+                    }
                 }
             }
         });

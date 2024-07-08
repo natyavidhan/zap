@@ -121,7 +121,7 @@ def post(post_id):
     liked = session['user']['_id'] in post['likes']
     if is_json:
         return jsonify({"post": post, "user": user, "liked": liked})
-    return render_template("post.html", post=post, user=user, liked=False)
+    return render_template("post.html", post=post, user=user, liked=liked)
 
 @app.route("/comment", methods=["POST"])
 def comment():
