@@ -10,7 +10,7 @@
     <div class="post">
         <img src="{{post.img_url}}" alt="" class="post-img">
         <div class="stats">
-            <button name="like-btn" class="btn btn{% if not liked %}-outline{% endif %}-light" onclick="like()"><i class="bi bi-heart{% if liked %}-fill{% endif %}"></i> {{post.likes|length}}</button>
+            <button name="like-btn" class="btn btn{% if not liked %}-outline{% endif %}-light" onclick="like('{{post._id}}')"><i class="bi bi-heart{% if liked %}-fill{% endif %}"></i> {{post.likes|length}}</button>
         </div>
         <div>
             <h6 class="disabled">{% for tag in post.tags %}#{{tag}} {% endfor %}</h6>
@@ -20,7 +20,7 @@
     <div class="comments">
         <div class="make-comment">
             <input class="form-control" type="text" placeholder="comment" name="comment">
-            <button type="button" class="btn btn-primary" onclick="comment()">Comment</button>
+            <button type="button" class="btn btn-primary" onclick="comment('{{post._id}}')">Comment</button>
         </div>
         <h4>Comments</h4>
         <ul class="comment-list">
@@ -30,62 +30,7 @@
         </ul>
     </div>
 </div>
-<script>
-    let post = "{{post._id}}";
-    function refresh_comments() {
-        $.ajax({
-            type: 'GET',
-            url: `/post/${post}?json=True`,
-            success: function(msg){
-                $(".comment-list").empty();
-                msg['post']['comments'].forEach(element => {
-                    console.log(element);
-                    $(".comment-list").append(
-                        `<li><a href="/profile/${element['userid']}">${element['username']}</a>: ${element['comment']}</li>`
-                    )
-                });
-                console.log(msg);
-            }
-        });
-    }
-
-    function comment() {
-        let comment = document.querySelector("input[name='comment']").value;
-        $.ajax({
-            type: 'POST',
-            url: `/comment?post=${post}&comment=${comment}`,
-            success: function(msg){
-                if (msg == "True") {
-                    refresh_comments();
-                }
-            }
-        });
-    }
-
-    function like() {
-        $.ajax({
-            type: 'POST',
-            url: `/like?post=${post}`,
-            success: function(msg){
-                if (msg == "True") {
-                    let btn = $('button[name="like-btn"]');
-                    let count = parseInt(btn.text());
-                    if (btn.hasClass("btn-light")){
-                        btn.removeClass("btn-light");
-                        btn.addClass("btn-outline-light");
-                        count-=1;
-                        btn.html(`<i class="bi bi-heart"></i> ${count}`);
-                    } else {
-                        btn.addClass("btn-light");
-                        btn.removeClass("btn-outline-light");
-                        count+=1;
-                        btn.html(`<i class="bi bi-heart-fill"></i> ${count}`);
-                    }
-                }
-            }
-        });
-    }
-</script>
+<script src="/static/post.js"></script>
 <!-- {{post}}
 {{user}} -->
 {% endblock body %}
