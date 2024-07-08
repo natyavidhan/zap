@@ -84,7 +84,7 @@ class Database:
         post = self.get_post(post_id)
         if user is None or post is None or comment.strip() == "":
             return False
-        post['comments'].append({"userid": user_id, "username": user['name'], "comment": comment})
+        post['comments'].append({"userid": user_id, "username": user['name'], "comment": comment, "on": datetime.now().timestamp()})
 
         self.posts.update({"comments": post['comments']}).eq("_id", post_id).execute()
         return True

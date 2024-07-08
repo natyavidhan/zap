@@ -126,23 +126,23 @@ def post(post_id):
 @app.route("/comment", methods=["POST"])
 def comment():
     if 'user' not in session:
-        return False
+        return "False"
     post = request.args.get("post")
     comment = request.args.get("comment")
     res = db.add_comment(session['user']['_id'], post, comment)
     if res:
-        return True
-    return False
+        return "True"
+    return "False"
 
 @app.route("/like", methods=["POST"])
 def like():
     if 'user' not in session:
-        return False
+        return "False"
     post = request.args.get("post")
     res = db.toggle_like(session['user']['_id'], post)
     if res:
-        return True
-    return False
+        return "True"
+    return "False"
 
 
 if __name__ == "__main__":

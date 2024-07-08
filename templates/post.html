@@ -18,17 +18,50 @@
         </div>
     </div>
     <div class="comments">
-        <form action="/comment" method="post" class="make-comment">
+        <div class="make-comment">
             <input class="form-control" type="text" placeholder="comment" name="comment">
-            <input type="hidden" name="post" value="{{post._id}}">
-            <button type="submit" class="btn btn-primary">Comment</button>
-        </form>
+            <button type="button" class="btn btn-primary" onclick="comment()">Comment</button>
+        </div>
         <h4>Comments</h4>
-        {% for comment in post.comments %}
-            <a href="/profile/{{comment.userid}}">{{comment.username}}</a>: {{comment.comment}}
-        {% endfor %}
+        <ul class="comment-list">
+            {% for comment in post.comments %}
+                <li><a href="/profile/{{comment.userid}}">{{comment.username}}</a>: {{comment.comment}}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
+<script>
+    function refresh_comments(post) {
+        $.ajax({
+            type: 'GET',
+            url: `/post/${post}?json=True`,
+            success: function(msg){
+                $(".comment-list").empty();
+                msg['post']['comments'].forEach(element => {
+                    console.log(element);
+                    $(".comment-list").append(
+                        `<li><a href="/profile/${element['userid']}">${element['username']}</a>: ${element['comment']}</li>`
+                    )
+                });
+                console.log(msg);
+            }
+        });
+    }
+
+    function comment() {
+        let post = "{{post._id}}";
+        let comment = document.querySelector("input[name='comment']").value;
+        $.ajax({
+            type: 'POST',
+            url: `/comment?post=${post}&comment=${comment}`,
+            success: function(msg){
+                if (msg == "True") {
+                    refresh_comments(post);
+                }
+            }
+        });
+    }
+</script>
 <!-- {{post}}
 {{user}} -->
 {% endblock body %}
