@@ -5,6 +5,42 @@
     .post{
         background-color: #1f1f1f; 
     }
+    
+    @media screen and (max-width: 475px) {
+        .post > img{
+            width: 95vw;
+        }
+        .post-full{        
+            grid-template-columns: 1fr;
+        }
+        .comments{
+            width: 95vw;
+        }
+    }
+
+    @media screen and (max-width: 1025px) and (min-width: 475px){
+        .post > img{
+            width: 70vw;
+        }
+        .post-full{        
+            grid-template-columns: 1fr;
+        }
+        .comments{
+            width: 70vw;
+        }
+    }
+
+    @media screen and (min-width: 1025px) {
+        .post > img{
+            width: 30vw;
+        }
+        .post-full{        
+            grid-template-columns: 1fr 1fr;
+        }
+        .comments{
+            width: 30vw;
+        }
+    }
 </style>
 <div class="post-full">
     <div class="post" data-post-id="{{post._id}}">

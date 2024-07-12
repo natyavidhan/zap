@@ -4,6 +4,7 @@
 <div class="feed">
     {% for post in posts %}
     <div class="post" style="cursor: pointer;" data-post-id="{{post._id}}">
+        <h5 class="m-2">{{post.user}}</h5>
         <img onclick="window.location.href='/post/{{post._id}}'" src="{{post.img_url}}" alt="" class="post-img">
         <div class="stats">
             <button name="like-btn" class="btn btn{% if not post.liked %}-outline{% endif %}-light" onclick="like('{{post._id}}')"><i class="bi bi-heart{% if post.liked %}-fill{% endif %}"></i> {{post.likes|length}}</button>
@@ -15,7 +16,52 @@
     </div>
     {% endfor %}
 </div>
+<div class="loader"></div>
 <script>
+    let scrollLoad = true;
+    $(window).scroll(function () { 
+        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && scrollLoad) {
+            scrollLoad = false
+        $.ajax({
+                type: "GET",
+                url: "/random",
+                success: function(msg){
+                    // console.log(msg)
+                    let user = "{{user._id}}"
+                    for (let i=0; i < msg.length; i++){
+                        let tag_text = ""
+                        for (let k=0; k<msg[i].tags.length; k++) {
+                            tag_text+=`#${msg[i].tags[k]} `
+                        }
+                        let button_class = ""
+                        let icon = ""
+                        if (user in msg[i].likes) {
+                            button_class = "btn-light"
+                            icon = "bi-heart-fill"
+                        } else {
+                            button_class = "btn-outline-light"
+                            icon = "bi-heart"
+                        }
+                        let html = `
+<div class="post" style="cursor: pointer;" data-post-id="${msg[i]._id}">
+    <img onclick="window.location.href='/post/${msg[i]._id}'" src="${msg[i].img_url}" alt="" class="post-img">
+    <div class="stats">
+        <button name="like-btn" class="btn ${button_class}" onclick="like('${msg[i]._id}')"><i class="bi ${icon}"></i> ${msg[i].likes.length}</button>
+    </div>
+    <div>
+        <h6 class="disabled">${tag_text}</h6>
+        <h4>${msg[i].caption}</h4>
+    </div>
+</div>`
+                        let curr_html = $(".feed").html()
+                        curr_html+=html
+                        $(".feed").html(curr_html)
+                    }
+                    scrollLoad = true;
+                }
+            })
+        }
+    });
     document.querySelector("[purpose='home']").classList.add("active");
 </script>
 {% endblock body %} 

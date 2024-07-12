@@ -53,14 +53,12 @@ main{
     color: #aeaeae;
 }
 
+.post > img {
+    justify-self: center
+}
+
 @media screen and (max-width: 475px) {
     .post > img{
-        width: 95vw;
-    }
-    .post-full{        
-        grid-template-columns: 1fr;
-    }
-    .comments{
         width: 95vw;
     }
 }
@@ -69,22 +67,13 @@ main{
     .post > img{
         width: 70vw;
     }
-    .post-full{        
-        grid-template-columns: 1fr;
-    }
-    .comments{
-        width: 70vw;
-    }
 }
 
 @media screen and (min-width: 1025px) {
     .post > img{
         width: 30vw;
     }
-    .post-full{        
-        grid-template-columns: 1fr 1fr;
-    }
-    .comments{
+    .post {
         width: 30vw;
     }
 }

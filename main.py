@@ -174,6 +174,9 @@ def follow():
     db.toggle_follow(session['user']['_id'], user_id)
     return "True"
 
+@app.route("/random")
+def random_posts():
+    return jsonify(db.random_posts())
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)
