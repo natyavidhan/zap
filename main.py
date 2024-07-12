@@ -117,7 +117,7 @@ def new():
 @app.route("/post/<post_id>")
 def post(post_id):
     post = db.get_posts(post_id)
-    if not post:
+    if len(post) == 0:
         return redirect("/")
     is_json = request.args.get("json")
     user = db.fetch_user("_id", post['user'])

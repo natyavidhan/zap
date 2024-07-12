@@ -75,8 +75,6 @@ class Database:
     
     def get_posts(self, *post_ids):
         post = self.posts.select("*").in_("_id", post_ids).execute().model_dump()['data']
-        if len(post) == 0:
-            return None
         if len(post_ids) == 1:
             return post[0]
         return post
@@ -84,7 +82,7 @@ class Database:
     def add_comment(self, user_id, post_id, comment):
         user = self.fetch_user("_id", user_id)
         post = self.get_posts(post_id)
-        if user is None or post is None or comment.strip() == "":
+        if user is None or len(post) == 0 or comment.strip() == "":
             return False
         post['comments'].append({"userid": user_id, "username": user['name'], "comment": comment, "on": datetime.now().timestamp()})
 
@@ -94,7 +92,7 @@ class Database:
     def toggle_like(self, user_id, post_id):
         user = self.fetch_user("_id", user_id)
         post = self.get_posts(post_id)
-        if user is None or post is None:
+        if user is None or len(post) == 0:
             return False
         if user_id in post['likes']:
             post['likes'].remove(user_id)
