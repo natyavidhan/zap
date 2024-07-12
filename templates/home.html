@@ -2,17 +2,18 @@
 {% block title %}Home{% endblock title %}
 {% block body %}
 <div class="feed">
-    <div class="post">
-        <h5>user1234</h5>
-        <img src="https://compote.slate.com/images/926e5009-c10a-48fe-b90e-fa0760f82fcd.png?crop=680%2C453%2Cx0%2Cy0&width=1280" alt="">
+    {% for post in posts %}
+    <div class="post" style="cursor: pointer;" data-post-id="{{post._id}}">
+        <img onclick="window.location.href='/post/{{post._id}}'" src="{{post.img_url}}" alt="" class="post-img">
         <div class="stats">
-            <button class="btn btn-outline-light"><i class="bi bi-heart"></i> 69</button>
+            <button name="like-btn" class="btn btn{% if not post.liked %}-outline{% endif %}-light" onclick="like('{{post._id}}')"><i class="bi bi-heart{% if post.liked %}-fill{% endif %}"></i> {{post.likes|length}}</button>
         </div>
         <div>
-            <h6 class="disabled">#stock #money #bread</h6>
-            <h4>Stonks go brrrt</h4>
+            <h6 class="disabled">{% for tag in post.tags %}#{{tag}} {% endfor %}</h6>
+            <h4>{{post.caption}}</h4>
         </div>
     </div>
+    {% endfor %}
 </div>
 <script>
     document.querySelector("[purpose='home']").classList.add("active");

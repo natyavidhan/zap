@@ -103,3 +103,6 @@ class Database:
         
         self.posts.update({"likes": post['likes']}).eq("_id", post_id).execute()
         return True
+
+    def random_posts(self):
+        return self.supabase.table("random_posts").select("*").limit(5).execute().model_dump()['data']
