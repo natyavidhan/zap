@@ -12,8 +12,12 @@
     <h5>{{user.bio}}</h5>
     <h5>{{user.followers|length}} Followers • {{user.following|length}} Following</h5>
     <div>
+        {% if me %}
         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> Edit</button>
         <button type="button" class="btn btn-danger"><i class="bi bi-door-open"></i> Logout</button>
+        {% else %}
+        <button type="button" class="btn btn-danger">Follow</button>
+        {% endif %}
     </div>
 </div>
 

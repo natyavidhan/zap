@@ -147,6 +147,21 @@ def like():
         return "True"
     return "False"
 
+@app.route("/profile/<user_id>")
+def profile(user_id):
+    user = db.fetch_user("_id", user_id)
+    if user is None:
+        return redirect("/")
+    
+    posts = db.get_posts(*user['posts'])
+    for post_ in posts:
+        post_["liked"] = session['user']['_id'] in post_['likes']
+    
+    if 'user' not in session:
+        return render_template("profile.html", me=False, user=user, posts=posts)
+    if session['user']['_id'] == user_id:
+        return redirect("/me")
+    return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session['user']['_id']))
 
 if __name__ == "__main__":
     app.run("localhost", debug=True)
