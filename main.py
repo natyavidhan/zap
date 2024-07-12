@@ -44,7 +44,6 @@ def google():
 def google_auth():
     token = oauth.google.authorize_access_token()
     prof = token['userinfo']
-    print(prof)
     user = db.fetch_user("email", prof['email'])
     if user is None:
         user = db.create_user(prof['email'], prof['name'])
@@ -60,11 +59,12 @@ def logout():
 def self():
     if 'user'not in session:
         return redirect(url_for("index"))
-    print(session['user'])
     user = db.fetch_user("email", session['user']['email'])
     error = request.args.get("error")
 
-    posts = [db.get_post(post_id) for post_id in user['posts']]
+    posts = db.get_posts(*user['posts'])
+    for post_ in posts:
+        post_["liked"] = session['user']['_id'] in post_['likes']
 
     return render_template("profile.html", user=user, me=True, error= error, posts=posts)
 
@@ -113,7 +113,7 @@ def new():
 
 @app.route("/post/<post_id>")
 def post(post_id):
-    post = db.get_post(post_id)
+    post = db.get_posts(post_id)
     if not post:
         return redirect("/")
     is_json = request.args.get("json")

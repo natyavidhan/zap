@@ -7,7 +7,7 @@
     }
 </style>
 <div class="post-full">
-    <div class="post">
+    <div class="post" data-post-id="{{post._id}}">
         <img src="{{post.img_url}}" alt="" class="post-img">
         <div class="stats">
             <button name="like-btn" class="btn btn{% if not liked %}-outline{% endif %}-light" onclick="like('{{post._id}}')"><i class="bi bi-heart{% if liked %}-fill{% endif %}"></i> {{post.likes|length}}</button>

@@ -34,7 +34,7 @@ function like(post) {
         url: `/like?post=${post}`,
         success: function(msg){
             if (msg == "True") {
-                let btn = $('button[name="like-btn"]');
+                let btn = $(`[data-post-id="${post}"] > div.stats > button[name="like-btn"]`);
                 let count = parseInt(btn.text());
                 if (btn.hasClass("btn-light")){
                     btn.removeClass("btn-light");

@@ -1,7 +1,5 @@
 flask
-pymongo
-dnspython
-supabase
+supabase-py
 authlib
 python-dotenv
 requests
