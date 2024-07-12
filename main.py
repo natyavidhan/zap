@@ -163,5 +163,17 @@ def profile(user_id):
         return redirect("/me")
     return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session['user']['_id']))
 
+@app.route("/follow", methods=["POST"])
+def follow():
+    if 'user' not in session:
+        return "False"
+    user_id = request.args.get("user_id")
+    user = db.fetch_user("_id", user_id)
+    if user is None:
+        return "False"
+    db.toggle_follow(session['user']['_id'], user_id)
+    return "True"
+
+
 if __name__ == "__main__":
     app.run("localhost", debug=True)

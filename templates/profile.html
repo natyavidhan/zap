@@ -10,13 +10,17 @@
 <div class="text-center profile">
     <h1>{{user.name}}</h1>
     <h5>{{user.bio}}</h5>
-    <h5>{{user.followers|length}} Followers • {{user.following|length}} Following</h5>
+    <h5><span id="follower-count">{{user.followers|length}}</span> Followers • <span id="following-count">{{user.following|length}}</span> Following</h5>
     <div>
         {% if me %}
         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> Edit</button>
         <button type="button" class="btn btn-danger"><i class="bi bi-door-open"></i> Logout</button>
         {% else %}
-        <button type="button" class="btn btn-danger">Follow</button>
+        {% if user._id not in current.following %}
+        <button type="button" class="btn btn-outline-light follow-btn" onclick="toggle_follow()">Follow</button>
+        {% else %}
+        <button type="button" class="btn btn-light follow-btn" onclick="toggle_follow()">Following</button>
+        {% endif %}
         {% endif %}
     </div>
 </div>
@@ -68,6 +72,50 @@
 
 <script src="/static/post.js"></script>
 <script>
+    $(".follow-btn").hover(
+        function() {
+            var $this = $(this); // caching $(this)
+            $this.data('defaultText', $this.text());
+            if ($this.hasClass("btn-light")){
+                $this.text("Unfollow");
+            }
+        },
+        function() {
+            var $this = $(this); // caching $(this)
+            $this.text($this.data('defaultText'));
+        }
+    )
+    function toggle_follow() {
+        let user = "{{user._id}}"
+        $.ajax({
+            type: 'POST',
+            url: `/follow?user_id=${user}`,
+            success: function(msg){
+                if (msg == "True") {
+                    let btn = $(".follow-btn")
+                    let follow_count_elem = $("#follower-count")
+                    let count = parseInt(follow_count_elem.text())
+                    if (btn.hasClass("btn-light")){
+                        btn.removeClass("btn-light");
+                        btn.addClass("btn-outline-light");
+                        btn.text(`Follow`);
+                        count-=1;
+                        follow_count_elem.text(count);
+                    } else {
+                        btn.addClass("btn-light");
+                        btn.removeClass("btn-outline-light");
+                        btn.text(`Following`);
+                        count+=1;
+                        follow_count_elem.text(count);
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% if me %}
+<script>
     document.querySelector("[purpose='profile']").classList.add("active");
 </script>
+{% endif %}
 {% endblock body %}

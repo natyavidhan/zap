@@ -104,3 +104,18 @@ class Database:
 
     def random_posts(self):
         return self.supabase.table("random_posts").select("*").limit(5).execute().model_dump()['data']
+    
+    def toggle_follow(self, follower, following):
+        user = self.fetch_user("_id", follower)
+        other = self.fetch_user("_id", following)
+
+        if following not in user['following']:
+            user['following'].append(following)
+            other['followers'].append(follower)
+        else:
+            user['following'].remove(following)
+            other['followers'].remove(follower)
+
+        self.users.update({"following": user['following']}).eq("_id", follower).execute()
+        self.users.update({"followers": other['followers']}).eq("_id", following).execute()
+        return True
