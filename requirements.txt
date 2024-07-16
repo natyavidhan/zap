@@ -1,5 +1,5 @@
 flask
-supabase-py
+supabase
 authlib
 python-dotenv
 requests
