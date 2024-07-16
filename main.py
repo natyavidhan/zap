@@ -90,6 +90,8 @@ def edit():
         return redirect(url_for("self") + "?error=Username already in use")
     
     db.edit_profile(session['user']['email'], username, name, bio)
+    _id = session['user']['_id']
+    session['user'] = db.fetch_user("_id", _id)
     return redirect(url_for("self"))
 
 @app.route("/new", methods=["GET", "POST"])
@@ -148,9 +150,9 @@ def like():
         return "True"
     return "False"
 
-@app.route("/profile/<user_id>")
-def profile(user_id):
-    user = db.fetch_user("_id", user_id)
+@app.route("/profile/<username>")
+def profile(username):
+    user = db.fetch_user("username", username)
     if user is None:
         return redirect("/")
     
@@ -160,7 +162,7 @@ def profile(user_id):
     
     if 'user' not in session:
         return render_template("profile.html", me=False, user=user, posts=posts)
-    if session['user']['_id'] == user_id:
+    if session['user']['username'] == username:
         return redirect("/me")
     return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session['user']['_id']))
 
