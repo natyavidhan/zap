@@ -101,9 +101,18 @@ class Database:
         
         self.posts.update({"likes": post['likes']}).eq("_id", post_id).execute()
         return True
+    
+    def attach_username(self, posts):
+        users = [i['user'] for i in posts]
+        user_objs = self.supabase.table("zap_users").select("*").in_("_id", users).execute().model_dump()['data']
+        new_posts = []
+        for post in posts:
+            post['username'] = {i['_id']: i['username'] for i in user_objs}[post['user']]
+            new_posts.append(post)
+        return new_posts
 
     def random_posts(self):
-        return self.supabase.table("random_posts").select("*").limit(5).execute().model_dump()['data']
+        return self.attach_username(self.supabase.table("random_posts").select("*").limit(5).execute().model_dump()['data'])
     
     def toggle_follow(self, follower, following):
         user = self.fetch_user("_id", follower)
@@ -122,4 +131,4 @@ class Database:
     
     def get_followed_content(self, user_id):
         users = self.fetch_user("_id", user_id)['following']
-        return self.supabase.table("random_posts").select("*").in_("user", users).limit(5).execute().model_dump()['data']
+        return self.attach_username(self.supabase.table("random_posts").select("*").in_("user", users).limit(5).execute().model_dump()['data'])

@@ -4,7 +4,7 @@
 <div class="feed">
     {% for post in posts %}
     <div class="post" style="cursor: pointer;" data-post-id="{{post._id}}">
-        <h5 class="m-2">{{post.user}}</h5>
+        <h5 class="m-2">{{post.username}}</h5>
         <img onclick="window.location.href='/post/{{post._id}}'" src="{{post.img_url}}" alt="" class="post-img">
         <div class="stats">
             <button name="like-btn" class="btn btn{% if not post.liked %}-outline{% endif %}-light" onclick="like('{{post._id}}')"><i class="bi bi-heart{% if post.liked %}-fill{% endif %}"></i> {{post.likes|length}}</button>
@@ -45,6 +45,7 @@
                         }
                         let html = `
 <div class="post" style="cursor: pointer;" data-post-id="${msg[i]._id}">
+        <h5 class="m-2">${msg[i].username}</h5>
     <img onclick="window.location.href='/post/${msg[i]._id}'" src="${msg[i].img_url}" alt="" class="post-img">
     <div class="stats">
         <button name="like-btn" class="btn ${button_class}" onclick="like('${msg[i]._id}')"><i class="bi ${icon}"></i> ${msg[i].likes.length}</button>
