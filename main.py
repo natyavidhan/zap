@@ -19,7 +19,7 @@ db = Database()
 def index():
     if 'user'not in session:
         return render_template("index.html")
-    posts = db.random_posts()
+    posts = db.get_followed_content(session['user']['_id'])
     for post_ in posts:
         post_["liked"] = session['user']['_id'] in post_['likes']
     return render_template("home.html", user=session['user'], posts = posts)

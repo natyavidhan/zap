@@ -119,3 +119,7 @@ class Database:
         self.users.update({"following": user['following']}).eq("_id", follower).execute()
         self.users.update({"followers": other['followers']}).eq("_id", following).execute()
         return True
+    
+    def get_followed_content(self, user_id):
+        users = self.fetch_user("_id", user_id)['following']
+        return self.supabase.table("random_posts").select("*").in_("user", users).limit(5).execute().model_dump()['data']
