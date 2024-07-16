@@ -19,11 +19,18 @@
 <div class="loader"></div>
 <script src="/static/post.js"></script>
 <script>
+    $(document.body).on('touchmove', onScroll); // for mobile
+    $(window).on('scroll', onScroll); 
+
+    // callback
     let scrollLoad = true;
-    $(window).scroll(function () { 
-        if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && scrollLoad) {
+
+    function onScroll(){ 
+
+        if( $(window).scrollTop() + window.innerHeight >= document.body.scrollHeight && scrollLoad) { 
             scrollLoad = false
-        $.ajax({
+            
+            $.ajax({
                 type: "GET",
                 url: "/random",
                 success: function(msg){
@@ -62,8 +69,13 @@
                     scrollLoad = true;
                 }
             })
+        
         }
-    });
+    }
+    // $(window).scroll(function () { 
+    //     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && scrollLoad) {
+    //    }
+    // });
     document.querySelector("[purpose='home']").classList.add("active");
 </script>
 {% endblock body %} 
