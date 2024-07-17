@@ -86,6 +86,9 @@ def edit():
     if username.strip() == "" or name.strip() == "":
         return redirect(url_for("self") + "?error=Username/name cannot be blank")
 
+    if " " in username:
+        return redirect(url_for("self") + "?error=username cannot contain spaces")
+
     if  res is not None and res['email'] != session['user']['email']:
         return redirect(url_for("self") + "?error=Username already in use")
     
