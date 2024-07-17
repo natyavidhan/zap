@@ -122,6 +122,7 @@ def post(post_id):
     post = db.get_posts(post_id)
     if len(post) == 0:
         return redirect("/")
+    post = post[0]
     is_json = request.args.get("json")
     user = db.fetch_user("_id", post['user'])
     liked = session['user']['_id'] in post['likes']

@@ -75,8 +75,6 @@ class Database:
     
     def get_posts(self, *post_ids):
         post = self.posts.select("*").in_("_id", post_ids).execute().model_dump()['data']
-        if len(post_ids) == 1:
-            return post[0]
         return post
     
     def add_comment(self, user_id, post_id, comment):
@@ -84,6 +82,7 @@ class Database:
         post = self.get_posts(post_id)
         if user is None or len(post) == 0 or comment.strip() == "":
             return False
+        post = post[0]
         post['comments'].append({"userid": user_id, "username": user['name'], "comment": comment, "on": datetime.now().timestamp()})
 
         self.posts.update({"comments": post['comments']}).eq("_id", post_id).execute()
@@ -94,6 +93,7 @@ class Database:
         post = self.get_posts(post_id)
         if user is None or len(post) == 0:
             return False
+        post = post[0]
         if user_id in post['likes']:
             post['likes'].remove(user_id)
         else:
