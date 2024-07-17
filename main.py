@@ -125,7 +125,10 @@ def post(post_id):
     post = post[0]
     is_json = request.args.get("json")
     user = db.fetch_user("_id", post['user'])
-    liked = session['user']['_id'] in post['likes']
+    if 'user' in session:
+        liked = session['user']['_id'] in post['likes']
+    else:
+        liked = False
     if is_json:
         return jsonify({"post": post, "user": user, "liked": liked})
     return render_template("post.html", post=post, user=user, liked=liked)
@@ -159,7 +162,10 @@ def profile(username):
     
     posts = db.get_posts(*user['posts'])
     for post_ in posts:
-        post_["liked"] = session['user']['_id'] in post_['likes']
+        if 'user' in session:
+            post_["liked"] = session['user']['_id'] in post_['likes']
+        else:
+            post_["liked"] = False
     
     if 'user' not in session:
         return render_template("profile.html", me=False, user=user, posts=posts)
