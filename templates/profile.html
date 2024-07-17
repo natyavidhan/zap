@@ -10,7 +10,42 @@
 <div class="text-center profile">
     <h1>{{user.name}}</h1>
     <h5>{{user.bio}}</h5>
-    <h5><span id="follower-count">{{user.followers|length}}</span> Followers • <span id="following-count">{{user.following|length}}</span> Following</h5>
+    <div>
+        <button data-bs-toggle="modal" data-bs-target="#follower-modal" class="profile-btn"><h5><span id="follower-count">{{user.followers|length}}</span> Followers</h5></button>
+        <button data-bs-toggle="modal" data-bs-target="#following-modal" class="profile-btn"><h5><span id="following-count">{{user.following|length}}</span> Following</h5></button>
+    </div>    
+    <div class="modal fade" id="follower-modal" tabindex="-1" aria-labelledby="follower-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h1 class="modal-title fs-5" id="follower-modal-label">Followers</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% for follower in user.followers %}
+                        {{follower}}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="following-modal" tabindex="-1" aria-labelledby="following-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h1 class="modal-title fs-5" id="following-modal-label">Followers</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% for following in user.following %}
+                        {{following}}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div>
         {% if me %}
         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> Edit</button>

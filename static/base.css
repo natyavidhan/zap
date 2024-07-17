@@ -97,3 +97,9 @@ main{
     gap: 1rem;
     margin: 1rem;
 }
+
+.profile-btn{
+    background-color: #1f1f1f;
+    color: white;
+    border: none;
+}
