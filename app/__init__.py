@@ -18,8 +18,10 @@ def create_app():
     oauth.init_app(app)
 
     from app.blueprints.auth import bp as auth_bp
+    from app.blueprints.user import bp as user_bp
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(user_bp)
 
     @app.route("/")
     def index():
@@ -31,43 +33,6 @@ def create_app():
             post_["liked"] = session['user']['_id'] in post_['likes']
         return render_template("home.html", user=session['user'], posts = posts)
 
-    @app.route("/me")
-    def self():
-        if 'user'not in session:
-            return redirect(url_for("index"))
-        user = db.fetch_user("email", session['user']['email'])
-        error = request.args.get("error")
-
-        posts = db.get_posts(*user['posts'])
-        for post_ in posts:
-            post_["liked"] = session['user']['_id'] in post_['likes']
-
-        return render_template("profile.html", user=user, me=True, error= error, posts=posts)
-
-    @app.route("/edit", methods=["POST"])
-    def edit():
-        if 'user'not in session:
-            return redirect(url_for("index"))
-        
-        username = request.form.get("username")
-        name = request.form.get("name")
-        bio = request.form.get("bio")
-
-        res = db.fetch_user("username", username)
-
-        if username.strip() == "" or name.strip() == "":
-            return redirect(url_for("self") + "?error=Username/name cannot be blank")
-
-        if " " in username:
-            return redirect(url_for("self") + "?error=username cannot contain spaces")
-
-        if  res is not None and res['email'] != session['user']['email']:
-            return redirect(url_for("self") + "?error=Username already in use")
-        
-        db.edit_profile(session['user']['email'], username, name, bio)
-        _id = session['user']['_id']
-        session['user'] = db.fetch_user("_id", _id)
-        return redirect(url_for("self"))
 
     @app.route("/new", methods=["GET", "POST"])
     def new():
@@ -129,43 +94,8 @@ def create_app():
             return "True"
         return "False"
 
-    @app.route("/profile/<username>")
-    def profile(username):
-        user = db.fetch_user("username", username)
-        if user is None:
-            return redirect("/")
-        
-        posts = db.get_posts(*user['posts'])
-        for post_ in posts:
-            if 'user' in session:
-                post_["liked"] = session['user']['_id'] in post_['likes']
-            else:
-                post_["liked"] = False
-        
-        if 'user' not in session:
-            return render_template("profile.html", me=False, user=user, posts=posts)
-        if session['user']['username'] == username:
-            return redirect("/me")
-        return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session['user']['_id']))
-
-    @app.route("/follow", methods=["POST"])
-    def follow():
-        if 'user' not in session:
-            return "False"
-        user_id = request.args.get("user_id")
-        user = db.fetch_user("_id", user_id)
-        if user is None:
-            return "False"
-        db.toggle_follow(session['user']['_id'], user_id)
-        return "True"
-
     @app.route("/random")
     def random_posts():
         return jsonify(db.random_posts())
-
-    @app.route("/fetch-user")
-    def fetch_user():
-        if 'user' not in session:
-            return jsonify({"message": "auth error"})
         
     return app

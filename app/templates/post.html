@@ -61,7 +61,7 @@
         <h4>Comments</h4>
         <ul class="comment-list">
             {% for comment in post.comments %}
-                <li><a href="/profile/{{comment.userid}}">{{comment.username}}</a>: {{comment.comment}}</li>
+                <li><a href="/user/profile/{{comment.username}}">{{comment.username}}</a>: {{comment.comment}}</li>
             {% endfor %}
         </ul>
     </div>
