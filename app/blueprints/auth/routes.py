@@ -1,16 +1,15 @@
 
 from flask import render_template, session, redirect, url_for
 
-import os
-
+from config import Config
 from app.blueprints.auth import bp
 from app import oauth
 from app import db
 
 @bp.route('/google/')
 def google():
-    GOOGLE_CLIENT_ID = os.environ.get('G_CLIENT_ID')
-    GOOGLE_CLIENT_SECRET = os.environ.get('G_CLIENT_SECRET')
+    GOOGLE_CLIENT_ID = Config.GOOGLE_CLIENT_ID
+    GOOGLE_CLIENT_SECRET = Config.GOOGLE_CLIENT_SECRET
     
     CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
     oauth.register(

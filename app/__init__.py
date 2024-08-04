@@ -1,20 +1,15 @@
 from flask import Flask, render_template, session, url_for, redirect, request, jsonify
 from authlib.integrations.flask_client import OAuth
-from dotenv import load_dotenv
-
-import os
 
 from app.database import Database
-
-load_dotenv()
+from config import Config
 
 db = Database()
 oauth = OAuth()
 
-
 def create_app():
     app = Flask(__name__, template_folder="templates")
-    app.config.from_mapping(dict(os.environ))
+    app.config.from_object(Config)
     oauth.init_app(app)
 
     from app.blueprints.auth import bp as auth_bp

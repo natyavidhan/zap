@@ -6,12 +6,12 @@ from datetime import datetime
 import random
 from werkzeug.datastructures import FileStorage
 
-
+from config import Config
 
 class Database:
     def __init__(self):
-        url: str = os.environ.get("SUPABASE_URL")
-        key: str = os.environ.get("SUPABASE_KEY")
+        url: str = Config.SUPABASE_URL
+        key: str = Config.SUPABASE_KEY
         self.supabase: Client = create_client(url, key)
 
         self.users = self.supabase.table("zap_users")
@@ -48,7 +48,7 @@ class Database:
             .upload(file=file, 
                     path=location, 
                     file_options={"content-type": content_type}).json()['Key']
-        return f"{os.environ.get('SUPABASE_URL')}/storage/v1/object/public/{key}"
+        return f"{Config.SUPABASE_URL}/storage/v1/object/public/{key}"
 
     def create_post(self, user, caption, img:FileStorage, tags):
         post_id = str(uuid4())
