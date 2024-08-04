@@ -31,39 +31,6 @@ def create_app():
             post_["liked"] = session['user']['_id'] in post_['likes']
         return render_template("home.html", user=session['user'], posts = posts)
 
-    @app.route('/google/')
-    def google():
-        GOOGLE_CLIENT_ID = os.environ.get('G_CLIENT_ID')
-        GOOGLE_CLIENT_SECRET = os.environ.get('G_CLIENT_SECRET')
-        
-        CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
-        oauth.register(
-            name='google',
-            client_id=GOOGLE_CLIENT_ID,
-            client_secret=GOOGLE_CLIENT_SECRET,
-            server_metadata_url=CONF_URL,
-            client_kwargs={
-                'scope': 'openid email profile'
-            }
-        )
-        redirect_uri = url_for('google_auth', _external=True)
-        return oauth.google.authorize_redirect(redirect_uri)
-
-    @app.route('/google/auth')
-    def google_auth():
-        token = oauth.google.authorize_access_token()
-        prof = token['userinfo']
-        user = db.fetch_user("email", prof['email'])
-        if user is None:
-            user = db.create_user(prof['email'], prof['name'])
-        session['user'] = user
-        return redirect('/')
-
-    @app.route("/logout")
-    def logout():
-        session.pop("user")
-        return redirect(url_for("index"))
-
     @app.route("/me")
     def self():
         if 'user'not in session:
