@@ -3,6 +3,7 @@ from flask import render_template, session, redirect, url_for
 
 from config import Config
 from app.blueprints.auth import bp
+from app.blueprints.auth import utils
 from app import oauth
 from app import db
 
@@ -31,7 +32,8 @@ def google_auth():
     user = db.fetch_user("email", prof['email'])
     if user is None:
         user = db.create_user(prof['email'], prof['name'])
-    session['user'] = user
+    tokens = utils.gen_tokens(user)
+    session['user'] = tokens
     return redirect('/')
 
 @bp.route("/logout")
