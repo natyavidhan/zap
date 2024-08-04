@@ -19,7 +19,7 @@ function comment(post) {
     let comment = document.querySelector("input[name='comment']").value;
     $.ajax({
         type: 'POST',
-        url: `/comment?post=${post}&comment=${comment}`,
+        url: `/post/comment?post=${post}&comment=${comment}`,
         success: function(msg){
             if (msg == "True") {
                 refresh_comments(post);
@@ -31,7 +31,7 @@ function comment(post) {
 function like(post) {
     $.ajax({
         type: 'POST',
-        url: `/like?post=${post}`,
+        url: `/post/like?post=${post}`,
         success: function(msg){
             if (msg == "True") {
                 let btn = $(`[data-post-id="${post}"] > div.stats > button[name="like-btn"]`);

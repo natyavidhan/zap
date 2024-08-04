@@ -67,7 +67,7 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Edit</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/edit" method="post">
+            <form action="/user/edit" method="post">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -124,7 +124,7 @@
         let user = "{{user._id}}"
         $.ajax({
             type: 'POST',
-            url: `/follow?user_id=${user}`,
+            url: `/user/follow?user_id=${user}`,
             success: function(msg){
                 if (msg == "True") {
                     let btn = $(".follow-btn")
