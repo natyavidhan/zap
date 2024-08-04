@@ -9,13 +9,18 @@ from app.database import Database
 load_dotenv()
 
 db = Database()
+oauth = OAuth()
 
 
 def create_app():
     app = Flask(__name__, template_folder="templates")
     app.config.from_mapping(dict(os.environ))
+    oauth.init_app(app)
 
-    oauth = OAuth(app)
+    from app.blueprints.auth import bp as auth_bp
+
+    app.register_blueprint(auth_bp)
+
     @app.route("/")
     def index():
         if 'user'not in session:
