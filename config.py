@@ -6,7 +6,7 @@ load_dotenv()
 class Config:
     SECRET_KEY              = os.environ.get('SECRET_KEY')
     MONGO_URL               = os.environ.get('MONGO_URL')
-    
+
     SUPABASE_URL            = os.environ.get('SUPABASE_URL')
     SUPABASE_KEY            = os.environ.get('SUPABASE_KEY')
 
@@ -19,3 +19,6 @@ class Config:
         "access": 1,
         "refresh": 30
     }
+
+    ACCESS_EXPIRE = 'access token expired'
+    REFRESH_EXPIRE = 'refresh token expired'

@@ -1,4 +1,5 @@
 import jwt
+from flask import session
 
 from datetime import datetime
 from datetime import timedelta
@@ -30,7 +31,7 @@ def regen_tokens(refresh_token):
     try:
         refresh_obj = jwt.decode(refresh_token, Config.JWT_SECRET, algorithms=['HS256'])
     except jwt.ExpiredSignatureError:
-        return {"success": False, "message": "refresh token expired"}
+        return {"success": False, "message": Config.REFRESH_EXPIRE}
     except jwt.DecodeError:
         return {"success": False, "message": "malformed refresh token"}
     except Exception as e:
@@ -44,7 +45,18 @@ def validate_access_token(access_token):
     try:
         decoded = jwt.decode(access_token, Config.JWT_SECRET, algorithms=['HS256'])
     except jwt.ExpiredSignatureError:
-        return {"success": False, "message": "access token expired"}
+        return {"success": False, "message": Config.ACCESS_EXPIRE}
     except Exception as e:
         return {"success": False, "message": str(e)}
     return {"success": True, "obj": decoded}
+
+def get_current_user():
+    user = validate_access_token(session['user']['access_token'])
+    if user['success'] == False and user['message'] == Config.ACCESS_EXPIRE:
+        new_tokens = regen_tokens(session['user']['refresh_token'])
+        if new_tokens['success'] == False:
+            session.pop('user')
+            return False
+        session['user'] = new_tokens
+        user = validate_access_token(new_tokens['access_token'])
+    return user
