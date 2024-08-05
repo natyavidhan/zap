@@ -39,18 +39,18 @@ def edit():
     res = db.fetch_user("username", username)
 
     if username.strip() == "" or name.strip() == "":
-        return redirect(url_for("self") + "?error=Username/name cannot be blank")
+        return redirect(url_for("user.self") + "?error=Username/name cannot be blank")
 
     if " " in username:
-        return redirect(url_for("self") + "?error=username cannot contain spaces")
+        return redirect(url_for("user.self") + "?error=username cannot contain spaces")
 
     if  res is not None and res['email'] != session_obj['email']:
-        return redirect(url_for("self") + "?error=Username already in use")
+        return redirect(url_for("user.self") + "?error=Username already in use")
     
     db.edit_profile(session_obj['email'], username, name, bio)
     new_tokens = utils.regen_tokens(session['user']['refresh_token'])
     session['user'] = new_tokens
-    return redirect(url_for("self"))
+    return redirect(url_for("user.self"))
 
 @bp.route("/profile/<username>")
 def profile(username):

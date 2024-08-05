@@ -22,10 +22,10 @@ def google():
             'scope': 'openid email profile'
         }
     )
-    redirect_uri = url_for('google_auth', _external=True)
+    redirect_uri = url_for('auth.google_auth', _external=True)
     return oauth.google.authorize_redirect(redirect_uri)
 
-@bp.route('/google/auth')
+@bp.route('/google/callback')
 def google_auth():
     token = oauth.google.authorize_access_token()
     prof = token['userinfo']

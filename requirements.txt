@@ -4,4 +4,4 @@ authlib
 python-dotenv
 requests
 gunicorn
-jwt
+PyJWT

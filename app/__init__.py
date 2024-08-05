@@ -20,14 +20,21 @@ def create_app():
     app.register_blueprint(user_bp)
     app.register_blueprint(post_bp)
 
+    from app.blueprints.auth import utils
+
     @app.route("/")
     def index():
         if 'user'not in session:
             return render_template("index.html")
-        posts = db.get_followed_content(session['user']['_id'])
+
+        session_obj = utils.get_current_user()
+        if session_obj is False:
+            return redirect(url_for("index"))
+        print(session_obj)
+        posts = db.get_followed_content(session_obj['_id'])
         posts.extend(db.random_posts())
         for post_ in posts:
-            post_["liked"] = session['user']['_id'] in post_['likes']
-        return render_template("home.html", user=session['user'], posts = posts)
+            post_["liked"] = session_obj['_id'] in post_['likes']
+        return render_template("home.html", user=session_obj, posts = posts)
         
     return app

@@ -59,4 +59,4 @@ def get_current_user():
             return False
         session['user'] = new_tokens
         user = validate_access_token(new_tokens['access_token'])
-    return user
+    return user['obj']
