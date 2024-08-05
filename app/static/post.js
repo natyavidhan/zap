@@ -7,7 +7,7 @@ function refresh_comments(post) {
             msg['post']['comments'].forEach(element => {
                 console.log(element);
                 $(".comment-list").append(
-                    `<li><a href="/profile/${element['userid']}">${element['username']}</a>: ${element['comment']}</li>`
+                    `<li><a href="/user/profile/${element['userid']}?mode=id">${element['username']}</a>: ${element['comment']}</li>`
                 )
             });
             console.log(msg);

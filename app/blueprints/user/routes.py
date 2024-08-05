@@ -54,6 +54,12 @@ def edit():
 
 @bp.route("/profile/<username>")
 def profile(username):
+    mode = request.args.get('mode')
+    if mode == 'id':
+        user = db.fetch_user('_id', username)
+        if user is None:
+            return redirect('/')
+        return redirect(f'/user/profile/{user['username']}')
     user = db.fetch_user("username", username)
     if user is None:
         return redirect("/")
@@ -70,8 +76,8 @@ def profile(username):
     if 'user' not in session:
         return render_template("profile.html", me=False, user=user, posts=posts)
     if session_obj is not False and session_obj['username'] == username:
-        return redirect("/me")
-    return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session['user']['_id']))
+        return redirect("/user/me")
+    return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session_obj['_id']))
 
 @bp.route("/follow", methods=["POST"])
 def follow():
