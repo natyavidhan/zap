@@ -75,13 +75,14 @@ def profile(username):
             post_["liked"] = session_obj['_id'] in post_['likes']
         else:
             post_["liked"] = False
+
+    posts = posts[::-1]
     
     if 'user' not in session:
         return render_template("profile.html", me=False, user=user, posts=posts)
     if session_obj is not False and session_obj['username'] == username:
         return redirect("/user/me")
     
-    posts = posts[::-1]
 
     return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session_obj['_id']))
 
