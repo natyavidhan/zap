@@ -1,9 +1,10 @@
-from flask import session, render_template, redirect, url_for, request
+from flask import Blueprint, session, render_template, redirect, url_for, request
 
-from app import db
+from main import db
 from config import Config
-from app.blueprints.user import bp
-from app.blueprints.auth import utils
+from blueprints import utils
+
+bp = Blueprint('user', __name__, url_prefix="/user")
 
 @bp.route("/me")
 def self():
@@ -20,6 +21,8 @@ def self():
     posts = db.get_posts(*user['posts'])
     for post_ in posts:
         post_["liked"] = session_obj['_id'] in post_['likes']
+    
+    posts = posts[::-1]
 
     return render_template("profile.html", user=user, me=True, error= error, posts=posts)
 
@@ -77,6 +80,9 @@ def profile(username):
         return render_template("profile.html", me=False, user=user, posts=posts)
     if session_obj is not False and session_obj['username'] == username:
         return redirect("/user/me")
+    
+    posts = posts[::-1]
+
     return render_template("profile.html", me=False, user=user, posts=posts, current=db.fetch_user("_id", session_obj['_id']))
 
 @bp.route("/follow", methods=["POST"])

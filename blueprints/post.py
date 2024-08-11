@@ -1,8 +1,9 @@
-from flask import session, request, redirect, render_template, url_for, jsonify
+from flask import Blueprint, session, request, redirect, render_template, url_for, jsonify
 
-from app import db
-from app.blueprints.post import bp
-from app.blueprints.auth import utils
+from main import db
+from blueprints import utils
+
+bp = Blueprint('post', __name__, url_prefix="/post")
 
 @bp.route("/new", methods=["GET", "POST"])
 def new():

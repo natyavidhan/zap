@@ -1,11 +1,12 @@
 
-from flask import render_template, session, redirect, url_for
+from flask import Blueprint, session, redirect, url_for
 
 from config import Config
-from app.blueprints.auth import bp
-from app.blueprints.auth import utils
-from app import oauth
-from app import db
+from blueprints import utils
+from main import oauth
+from main import db
+
+bp = Blueprint('auth', __name__, url_prefix="/auth")
 
 @bp.route('/google/')
 def google():

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, url_for, redirect, request, jsonify
 from authlib.integrations.flask_client import OAuth
 
-from app.database import Database
+from database import Database
 from config import Config
 
 db = Database()
@@ -12,15 +12,15 @@ def create_app():
     app.config.from_object(Config)
     oauth.init_app(app)
 
-    from app.blueprints.auth import bp as auth_bp
-    from app.blueprints.user import bp as user_bp
-    from app.blueprints.post import bp as post_bp
+    from blueprints.auth import bp as auth_bp
+    from blueprints.user import bp as user_bp
+    from blueprints.post import bp as post_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(post_bp)
 
-    from app.blueprints.auth import utils
+    from blueprints import utils
 
     @app.route("/")
     def index():
@@ -36,5 +36,8 @@ def create_app():
         for post_ in posts:
             post_["liked"] = session_obj['_id'] in post_['likes']
         return render_template("home.html", user=session_obj, posts = posts)
-        
     return app
+    
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)

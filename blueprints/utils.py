@@ -5,7 +5,7 @@ from datetime import datetime
 from datetime import timedelta
 
 from config import Config
-from app import db
+from main import db
 
 def gen_tokens(user_obj):
     d = datetime.now()
@@ -23,6 +23,7 @@ def gen_tokens(user_obj):
     }
 
     return {
+        "success": True,
         "access_token": jwt.encode(access_obj, Config.JWT_SECRET),
         "refresh_token": jwt.encode(refresh_obj, Config.JWT_SECRET),
     }
