@@ -37,7 +37,3 @@ def create_app():
             post_["liked"] = session_obj['_id'] in post_['likes']
         return render_template("home.html", user=session_obj, posts = posts)
     return app
-    
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
