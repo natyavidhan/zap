@@ -52,6 +52,8 @@ def validate_access_token(access_token):
     return {"success": True, "obj": decoded}
 
 def get_current_user():
+    if 'user' not in session:
+        return False
     user = validate_access_token(session['user']['access_token'])
     if user['success'] == False and user['message'] == Config.ACCESS_EXPIRE:
         new_tokens = regen_tokens(session['user']['refresh_token'])

@@ -51,10 +51,12 @@
         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i> Edit</button>
         <button type="button" class="btn btn-danger" onclick="window.location.href = '/auth/logout'"><i class="bi bi-door-open"></i> Logout</button>
         {% else %}
+        {% if current %}
         {% if user._id not in current.following %}
         <button type="button" class="btn btn-outline-light follow-btn" onclick="toggle_follow()">Follow</button>
         {% else %}
         <button type="button" class="btn btn-light follow-btn" onclick="toggle_follow()">Following</button>
+        {% endif %}
         {% endif %}
         {% endif %}
     </div>
